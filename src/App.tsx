@@ -1,24 +1,33 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
+import { SortableList } from './components';
 
+
+function createRange<T>(
+  length: number,
+  initializer: (index: number) => T
+): T[] {
+  return [...new Array(length)].map((_, index) => initializer(index));
+}
+
+function getMockItems() {
+  return createRange(50, (index) => ({ id: index + 1 }));
+}
 function App() {
+  const [items, setItems] = useState(getMockItems);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{ maxWidth: 400, margin: "30px auto" }}>
+      <SortableList
+        items={items}
+        onChange={setItems}
+        renderItem={(item) => (
+          <SortableList.Item id={item.id}>
+            {item.id}
+            <SortableList.DragHandle />
+          </SortableList.Item>
+        )}
+      />
     </div>
   );
 }
